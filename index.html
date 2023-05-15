@@ -30,7 +30,7 @@
               </select>
               <div class="mb-3 mt-3">
                 <div class="d-grid gap-2">
-                  <button type="button" class="btn btn-dark text-light" id="pdf">Export to PDF</button>
+                  <button type="button" class="btn btn-dark text-light" id="exportPDF">Export to PDF</button>
                 </div>
               </div>
             </div>
@@ -55,6 +55,7 @@
                 <th>Publisher</th>
                 <th>Faction</th>
                 <th>Height</th>
+                <th>Weight</th>
               </tr>
             </thead>
             <tbody>
@@ -72,7 +73,7 @@
         function getPublisher() {
           const data = new URLSearchParams();
           data.append("operacion", "listar");
-          fetch("../controllers/Publishers.Controller.php", {
+          fetch("./controllers/Publishers.Controller.php", {
             method: "POST",
             body: data
           })
@@ -91,7 +92,7 @@
           const data = new URLSearchParams();
           data.append("operacion", "listar");
           data.append("publisher_id", parseInt(listPublisher.value));
-          fetch('../controllers/SuperHero.Controller.php',{
+          fetch('./controllers/SuperHero.Controller.php',{
             method: 'POST',
             body: data
           })
