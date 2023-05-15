@@ -1,24 +1,18 @@
-<h1 class="text-md text-center"><?=$titulo?></h1>
+<h1 class="text-md text-center"><?=$race?>, <?=$gender?>, <?=$alignment?></h1>
 <table class="table table-border mt-3">
   <colgroup>
-    <col style='width: 10%'>
+    <col style='width: 20%'>
     <col style='width:20%'>
-    <col style='width:10%'>
-    <col style='width:10%'>
     <col style='width:20%'>
-    <col style='width:10%'>
-    <col  class='text-end' style='width:10%'>
-    <col  class='text-end' style='width:10%'>
+    <col style='width:20%'>
+    <col class='text-end' style='width:20%'>
   </colgroup>
   <thead>
     <tr>
       <th>ID</th>
       <th>Name</th>
-      <th>Gender</th>
-      <th>Race</th>
+      <th>Hair colour</th>
       <th>Publisher</th>
-      <th>Faction</th>
-      <th>Height</th>
       <th>Weight</th>
     </tr>
   </thead>
@@ -27,11 +21,8 @@
         <tr>
           <td><?=$registro['id']?></td>
           <td><?=$registro['superhero_name']?></td>
-          <td><?=$registro['gender']?></td>
-          <td><?=$registro['race']?></td>
+          <td><?=$registro['hair_colour']?></td>
           <td><?=$registro['publisher_name']?></td>
-          <td><?=$registro['alignment']?></td>
-          <td><?=$registro['height_cm']?></td>
           <td><?=$registro['weight_kg']?></td>
         </tr>
       <?php endforeach; ?>

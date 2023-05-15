@@ -25,9 +25,11 @@
               Filter your SuperHeros
             </div>
             <div class="card-body">
-              <select name="publisher" id="publisher" class="form-select">
-                <option value="">Select</option>
-              </select>
+                <div class="col-md-12 mb-3">
+                  <select name="publisher" id="publisher" class="form-select">
+                    <option value="">Select</option>
+                  </select>
+                </div>
               <div class="mb-3 mt-3">
                 <div class="d-grid gap-2">
                   <button type="button" class="btn btn-dark text-light" id="exportPDF">Export to PDF</button>
@@ -36,7 +38,6 @@
             </div>
           </div>
         </div>
-        
       </div>
       <!-- Tabla -->
       <div class="row">
@@ -69,6 +70,7 @@
       document.addEventListener("DOMContentLoaded", () => {
         const listPublisher = document.querySelector("#publisher");
         const tableSuperHeros = document.querySelector("#tbSuperHero tbody")
+        const exportPDF = document.querySelector("#exportPDF")
 
         function getPublisher() {
           const data = new URLSearchParams();
@@ -87,7 +89,6 @@
             });
           })
         }
-        
         function getSuperHero(){
           const data = new URLSearchParams();
           data.append("operacion", "listar");
@@ -120,9 +121,17 @@
           });
         })
       }
-        listPublisher.addEventListener("change", getSuperHero)
+        function generatePDF(){
+          const pm = new URLSearchParams();
+          pm.append("publisher_id", parseInt(listPublisher.value));
+          pm.append("titulo", listPublisher.options[listPublisher.selectedIndex].text);
+          window.open(`./reports/superhero.report.php?${pm}`,'_blank');
+        }
+        listPublisher.addEventListener("change", getSuperHero);
+        exportPDF.addEventListener("click", generatePDF);
         //Función lista las editoras cuando el documento esta listo
         getPublisher();
+
       })
     </script>
   </body>
