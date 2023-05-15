@@ -21,60 +21,107 @@
       <div class="row mt-3 mb-3">
         <div class="col-md-12">
           <div class="card">
-            <div class="card-header bg-info text-light">
+            <div class="card-header bg-dark text-light">
               Filter your SuperHeros
             </div>
             <div class="card-body">
               <select name="publisher" id="publisher" class="form-select">
+                <option value="">Select</option>
               </select>
+              <div class="mb-3 mt-3">
+                <div class="d-grid gap-2">
+                  <button type="button" class="btn btn-dark text-light" id="pdf">Export to PDF</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        
       </div>
       <!-- Tabla -->
       <div class="row">
         <div class="col-md-12">
-          <table class="table table-sm table-striped">
-            <thead>
+          <table id="tbSuperHero" class="table table-sm table-striped">
+            <thead class="bg-dark text-light">
               <tr>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Full Name</th>
                 <th>Gender</th>
+                <th>Eye colour</th>
+                <th>Hair colour</th>
                 <th>Skin colour</th>
                 <th>Race</th>
+                <th>Publisher</th>
                 <th>Faction</th>
                 <th>Height</th>
               </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+
+            </tbody>
           </table>
         </div>
       </div>
     </div>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const $ = (selector) => document.querySelector(selector);
-        const $selectPublisher = $("#publisher");
+        const listPublisher = document.querySelector("#publisher");
+        const tableSuperHeros = document.querySelector("#tbSuperHero tbody")
+
         function getPublisher() {
           const data = new URLSearchParams();
           data.append("operacion", "listar");
-
-          return fetch("../controllers/Publishers.Controller.php", {
+          fetch("../controllers/Publishers.Controller.php", {
             method: "POST",
-            body: data,
-          }).then((res) => res.json());
+            body: data
+          })
+          .then(res => res.json())
+          .then(datos =>{
+            datos.forEach(element => {
+              const optionTag = document.createElement("option");
+              optionTag.value = element.id;
+              optionTag.text = element.publisher_name;
+              listPublisher.appendChild(optionTag);
+            });
+          })
         }
-
-        Promise.all([
-          getPublisher()
-        ]).then((res) => {
-          const [dataPublisher] = res;
-          $selectPublisher.innerHTML = `<option value=''>Select</option>`;
-          dataPublisher.forEach(({ id, publisher_name }) => {
-            $selectPublisher.innerHTML += `<option value=${id}>${publisher_name}</option>`;
+        
+        function getSuperHero(){
+          const data = new URLSearchParams();
+          data.append("operacion", "listar");
+          data.append("publisher_id", parseInt(listPublisher.value));
+          fetch('../controllers/SuperHero.Controller.php',{
+            method: 'POST',
+            body: data
+          })
+          .then(res => res.json())
+          .then(datos =>{
+            tableSuperHeros.innerHTML= ``;
+            datos.forEach(element => {
+            let fila = `
+            <tr>
+              <td>${element.id}</td>
+              <td>${element.superhero_name}</td>
+              <td>${element.full_name}</td>
+              <td>${element.gender}</td>
+              <td>${element.eye_colour}</td>
+              <td>${element.hair_colour}</td>
+              <td>${element.skin_colour}</td>
+              <td>${element.race}</td>
+              <td>${element.publisher_name}</td>
+              <td>${element.alignment}</td>
+              <td>${element.height_cm}</td>
+              <td>${element.weight_kg}</td>
+              </tr>  
+              `;
+              tableSuperHeros.innerHTML += fila;
           });
-        });
+        })
+      }
+        listPublisher.addEventListener("change", getSuperHero)
+        //Función lista las editoras cuando el documento esta listo
+        getPublisher();
       })
     </script>
   </body>

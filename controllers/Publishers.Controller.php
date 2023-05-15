@@ -4,10 +4,10 @@ require_once '../model/Publishers.model.php';
 
 if (isset($_POST['operacion'])){
 
-  $categoria = new Publisher();
+  $publisher = new Publisher();
 
   if ($_POST['operacion'] == 'listar'){
-    $datosObtenidos = $categoria->listPublishers();
+    $datosObtenidos = $publisher->listPublishers();
     if ($datosObtenidos){
       echo json_encode($datosObtenidos);
     }
