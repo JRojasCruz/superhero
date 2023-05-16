@@ -13,6 +13,67 @@
   <title>Filters</title>
 </head>
 <body>
+  <nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="../index.html">
+        <img
+          src="../img/batman.png"
+          alt=""
+          width="55"
+          height="55"
+          class="d-inline-block align-text-top"
+        />
+      </a>
+      <div class="collapse navbar-collapse text-light" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="filtros.html">
+              <img
+              src="../img/hombre-arana.png"
+              alt=""
+              width="55"
+              height="55"
+              class="d-inline-block align-text-top"
+            />
+          </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="grafico-demo.html">
+              <img
+              src="../img/linterna.png"
+              alt=""
+              width="55"
+              height="55"
+              class="d-inline-block align-text-top"
+            />
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="grafico-update.html">
+              <img
+              src="../img/superheroe.png"
+              alt=""
+              width="55"
+              height="55"
+              class="d-inline-block align-text-top"
+            />
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="grafico-superhero.html">
+              <img
+              src="../img/superhombre.png"
+              alt=""
+              width="55"
+              height="55"
+              class="d-inline-block align-text-top"
+            />
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
   <div class="container">
     <div class="text-center mt-3">
       <h2>You can filter here your SuperHeros</h2>
@@ -24,19 +85,28 @@
     <div class="card-body">
       <div class="row">
         <div class="col-md-4">
+          <div class="form-floating">
           <select name="race" id="race" class="form-select">
             <option value="">Select race</option>
           </select>
+          <label for="race">Race</label>
         </div>
+      </div>
         <div class="col-md-4">
+          <div class="form-floating">
           <select name="gender" id="gender" class="form-select">
             <option value="">Select gender</option>
           </select>
+          <label for="race">Gender</label>
+          </div>
         </div>
         <div class="col-md-4">
+          <div class="form-floating">
           <select name="faction" id="faction" class="form-select">
             <option value="">Select faction</option>
           </select>
+          <label for="race">Faction</label>
+        </div>
         </div>
         <div class="col-md-6 mb-3 mt-3">
           <div class="d-grid ">
@@ -80,60 +150,31 @@
         const exportPDF = document.querySelector("#exportPDF")
         const btFilter = document.querySelector("#filter")
         
-        function getRace(){
-          const data = new URLSearchParams();
-          data.append("operacion", "listar");
-          fetch("../controllers/Racefilter.Controller.php",{
+        function getSelectData(operacion="", objectSelect){
+          const pm = new URLSearchParams();
+          pm.append("operacion", operacion);
+          fetch('../controllers/Filters.Controller.php',{
             method: 'POST',
-            body: data
+            body:pm
           })
           .then(res => res.json())
           .then(datos=>{
-            datos.forEach(element => {
+            datos.forEach(element=>{
               const optionTag = document.createElement("option");
-              optionTag.value = element.id;
-              optionTag.text = element.race;
-              listRace.appendChild(optionTag);
-            });
+              optionTag.value = element[0];
+              optionTag.text = element[1];
+              objectSelect.appendChild(optionTag);
+            })
           })
         }
-        function getGender(){
+        //Se invoca el proceso especificando la lista a renderizar
+        getSelectData("listFaction", listAlignment);
+        getSelectData("listRace", listRace);
+        getSelectData("listGender", listGender)
+
+        function renderSuperHero(){
           const data = new URLSearchParams();
-          data.append("operacion", "listar");
-          fetch("../controllers/Genderfilter.Controller.php",{
-            method: 'POST',
-            body: data
-          })
-          .then(res => res.json())
-          .then(datos=>{
-            datos.forEach(element => {
-              const optionTag = document.createElement("option");
-              optionTag.value = element.id;
-              optionTag.text = element.gender;
-              listGender.appendChild(optionTag);
-            });
-          })
-        }
-        function getFaction(){
-          const data = new URLSearchParams();
-          data.append("operacion", "listar");
-          fetch("../controllers/Factionfilter.Controller.php",{
-            method: 'POST',
-            body: data
-          })
-          .then(res => res.json())
-          .then(datos=>{
-            datos.forEach(element => {
-              const optionTag = document.createElement("option");
-              optionTag.value = element.id;
-              optionTag.text = element.alignment;
-              listAlignment.appendChild(optionTag);
-            });
-          })
-        }
-        function getSuperHero(){
-          const data = new URLSearchParams();
-          data.append("operacion", "listar");
+          data.append("operacion", "filter");
           data.append("race_id", parseInt(listRace.value));
           data.append("gender_id", parseInt(listGender.value));
           data.append("alignment_id", parseInt(listAlignment.value));
@@ -157,6 +198,10 @@
               tableSuperHeros.innerHTML += fila;
           });
         })
+        .catch(()=>{
+          tableSuperHeros.innerHTML= ``;
+          alert("No hay datos para mostrar")
+        })
         }
         function generatePDF(){
           const pm = new URLSearchParams();
@@ -169,10 +214,7 @@
           window.open(`../reports/reportsfilter/superhero.report.php?${pm}`,'_blank');
         }
         exportPDF.addEventListener("click", generatePDF);
-        btFilter.addEventListener("click", getSuperHero);
-        getRace();
-        getGender();
-        getFaction();
+        btFilter.addEventListener("click", renderSuperHero);
   })
 </script>
 </body>

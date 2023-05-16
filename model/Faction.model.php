@@ -1,6 +1,7 @@
 <?php
-require "Conexion.php";
-class Racefilter extends Conexion{
+require_once 'Conexion.php';
+
+class Faction extends Conexion{
   private $conexion;
 
   public function __CONSTRUCT()
@@ -8,12 +9,12 @@ class Racefilter extends Conexion{
     $this->conexion = parent::getConexion();
   }
 
-  public function listRace()
+  public function listFaction()
   {
     try {
-      $consulta = $this->conexion->prepare("SELECT * FROM race");
+      $consulta = $this->conexion->prepare("SELECT * FROM alignment");
       $consulta->execute();
-      return $consulta->fetchAll(PDO::FETCH_ASSOC);
+      return $consulta->fetchAll(PDO::FETCH_NUM);
     } catch (Exception $e) {
       die($e->getMessage());
     }

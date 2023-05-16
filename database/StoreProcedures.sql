@@ -1,9 +1,11 @@
 SELECT * FROM superhero;
-SELECT * FROM publisher;
+
 SELECT * FROM race;
 SELECT * FROM gender;
-SELECT * FROM alignment;
 
+
+USE superhero
+DROP DATABASE restaurant
 -- Procedimiento listar
 DELIMITER $$
 CREATE PROCEDURE spu_listar_superheros(IN _publisher_id INT)
@@ -67,3 +69,49 @@ CALL spu_filtrar_superheros(1,1,1);
 
 
 SELECT * FROM superhero WHERE race_id = 1 AND gender_id = 1 AND alignment_id = 1;
+
+DELIMITER $$
+CREATE PROCEDURE spu_alignment_graphic()
+BEGIN
+	SELECT	alignment.`id`,
+				alignment.`alignment`,
+				COUNT(*) 'amount'
+		FROM superhero
+		LEFT JOIN alignment ON alignment.`id` = superhero.`alignment_id`
+		GROUP BY alignment.`id`, alignment.`alignment`;
+END$$
+
+
+DELIMITER $$
+CREATE PROCEDURE spu_listar_faction(IN _publisher_id INT)
+BEGIN
+SELECT 
+		alignment.`id`,
+		alignment.`alignment`,
+		COUNT(*) 'amount'
+	FROM superhero
+		LEFT JOIN alignment ON alignment.`id` = superhero.`alignment_id`
+		WHERE superhero.`publisher_id` = _publisher_id AND superhero.`alignment_id` IN ('1','2')
+		GROUP BY alignment.`id`, alignment.`alignment`;
+END$$
+
+CALL spu_listar_faction(4);
+
+DELIMITER $$
+CREATE PROCEDURE spu_listar_eyecolour()
+BEGIN
+SELECT 
+		publisher.`id`,
+		publisher.`publisher_name`,
+		colour.`colour`,
+		COUNT(*) 'amount'
+	FROM superhero
+		LEFT JOIN colour ON colour.`id` = superhero.`eye_colour_id`
+		LEFT JOIN publisher ON publisher.`id` = superhero.`publisher_id`
+		WHERE superhero.`publisher_id` IN ('4','13')
+		GROUP BY publisher.`publisher_name`, colour.`colour`
+		ORDER BY colour.`colour`;
+END$$
+
+
+SELECT * FROM colour;
