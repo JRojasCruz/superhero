@@ -113,5 +113,20 @@ SELECT
 		ORDER BY colour.`colour`;
 END$$
 
-
+CALL spu_listar_eyecolour();
 SELECT * FROM colour;
+
+
+SELECT 
+		publisher.`id`,
+		publisher.`publisher_name`,
+		alignment.`alignment`,
+		COUNT(*)
+	FROM superhero
+		LEFT JOIN publisher ON publisher.`id` = superhero.`publisher_id`
+		LEFT JOIN alignment ON alignment.`id`= superhero.`alignment_id`
+		WHERE publisher.`id` IN ('2','5','11','18','24') AND alignment.`id` IN ('1','2','3','4')
+		GROUP BY publisher.`publisher_name`, alignment.`alignment`
+		ORDER BY publisher.`publisher_name`,alignment.`alignment`;
+		
+SELECT * FROM superhero WHERE publisher_id = 5 
